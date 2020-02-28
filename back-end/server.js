@@ -1,69 +1,39 @@
+// ==============================================================================
+// DEPENDENCIES
+// Series of npm packages that we will use to give our server useful functionality
+// ==============================================================================
 var express = require("express");
-var path = require("path");
-
+var tableData = require("./data/tableData.js")
+var waitinglistData = require("./data/waitinglistData.js")
+// ==============================================================================
+// EXPRESS CONFIGURATION
+// This sets up the basic properties for our express server
+// ==============================================================================
+// Tells node that we are creating an “express” server
 var app = express();
-var PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json);
+// Sets an initial port. We”ll use this later in our listener
+var PORT = process.env.PORT || 8080;
+// Sets up the Express app to handle data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// ================================================================================
+// ROUTER
+// The below points our server to a series of “route” files.
+// These routes give our server a “map” of how to respond when users visit or request data from various URLs.
+// ================================================================================
 
-var reservations = {
+app.get("/api/tables", function (req, res){
+    res.json(tableData)
+})
 
-}
+app.get("/api/waitinglist", function (req, res){
+    res.json(waitinglistData)
+})
 
-var waitlist = {
+// =============================================================================
+// LISTENER
 
-}
-
-// Basic route that sends the user first to the AJAX Page
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "view.html"));
-  });
-  ​
-  app.get("/add",(req, res) => {
-    res.sendFile(path.join(__dirname, "add.html"));
-  });
-  ​
-  // Displays all reservations
-  app.get("/api/reservations", (req, res) => {
-    return res.json(reservations);
-  });
-  ​
-  // Displays a single Reservation, or returns false
-app.get("/api/reservations/:Reservation", (req, res) => {
-    var chosen = req.params.Reservation;
-  ​
-    console.log(chosen);
-  ​
-    for (var i = 0; i < reservations.length; i++) {
-      if (chosen === reservations[i].routeName) {
-        return res.json(reservations[i]);
-      }
-    }
-  ​
-    return res.json(`${chosen} Reservation not found`);
-  });
-  ​
-  // Create New Reservations - takes in JSON input
-  app.post("/api/reservations", function(req, res) {
-    // req.body hosts is equal to the JSON post sent from the user
-    // This works because of our body parsing middleware
-    var newReservation = req.body;
-  ​
-    // Using a RegEx Pattern to remove spaces from newReservation
-    // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-    newReservation.routeName = newReservation.name.replace(/\s+/g, "").toLowerCase();
-  ​
-    console.log(newReservation);
-  ​
-    reservations.push(newReservation);
-  ​
-    res.json(newReservation);
-  });
-
-
-
-
-app.listen(PORT, () => {
-    console.log("App Listening on PORT " + PORT)
+app.listen(PORT, function() {
+  console.log("App listening on PORT: " + PORT);
 });
