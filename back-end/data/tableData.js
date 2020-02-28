@@ -1,9 +1,9 @@
 var reservations = [
     {
-       name: "Kayla Bell",
-       phoneNumber: "123-456-7891",
-       email: "kb@test.com",
-       uniqueId: "123kb" 
+    customerName: "Kayla Bell",
+    phoneNumber: "123-456-7891",
+    customerEmail: "kb@test.com",
+    customerID: "123kb" 
     },
 ]
 
